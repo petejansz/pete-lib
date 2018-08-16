@@ -5,13 +5,41 @@
 var Processes = ( function ()
 {
     const modulesPath = '/usr/share/node_modules/'
+    const axios = require( modulesPath + 'axios' )
+    var request = require( modulesPath + 'request-promise' )
+    var lib1 = require( modulesPath + 'pete-lib/pete-util' )
+    var util = require( 'util' )
 
-    var createNote = function ( host, playerId, responseHandler, errorHandler, noteText )
+    var createAxiosInstance = function( host, playerId )
     {
-        var util = require( 'util' )
-        var request = require( modulesPath + 'request-promise' )
-        var lib1 = require( modulesPath + 'pete-lib/pete-util' )
+        var headers = lib1.commonHeaders
+        headers['x-player-id'] = playerId
 
+        return axios.create(
+            {
+                baseURL: 'http://' + host + ':' + lib1.crmProcessesPort,
+                headers: headers,
+            }
+        )
+    },
+
+    createProcessesRequest = function ()
+    {
+        var request =
+            {
+                callerChannelId: lib1.caConstants.channelId,
+                callingClientId: lib1.getFirstIPv4Address(),
+                callerSystemId: lib1.caConstants.systemId,
+                transactionIdBase: lib1.generateUUID(),
+                transactionTime: new Date().valueOf(),
+                siteID: lib1.caConstants.siteID
+            }
+
+        return request
+    },
+
+    createNote = function ( host, playerId, responseHandler, errorHandler, noteText )
+    {
         var text = noteText ? noteText : 'Make a note @ ' + new Date()
         const note =
             {
@@ -62,6 +90,8 @@ var Processes = ( function ()
     }
 
     return {
+        createAxiosInstance: createAxiosInstance,
+        createProcessesRequest: createProcessesRequest,
         createNote: createNote
     }
 } )()
