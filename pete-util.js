@@ -84,6 +84,29 @@ var util =
             return formattedString
         },
 
+        convertJSONToStringArray: function( data, sep )
+        {
+            var stringArray = []
+
+            var columnNames = Object.keys( data[0] )
+            var headers = columnNames.join( sep )
+            stringArray.push( headers )
+
+            for ( var i = 1; i < data.length; i++ )
+            {
+                var row = data[i]
+                var values = []
+                columnNames.forEach( function ( columnName )
+                {
+                    values.push( row[columnName] )
+                } );
+
+                stringArray.push( values.join( sep ) )
+            }
+
+            return stringArray
+        },
+
         generateUUID: function ()
         {
             var d = new Date().getTime()
