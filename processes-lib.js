@@ -6,14 +6,20 @@ var Processes = ( function ()
 {
     const modulesPath = '/usr/share/node_modules/'
     const axios = require( modulesPath + 'axios' )
-    var request = require( modulesPath + 'request-promise' )
     var lib1 = require( modulesPath + 'pete-lib/pete-util' )
-    var util = require( 'util' )
 
-    var createAxiosInstance = function( host, playerId )
+    var createAxiosInstance = function( host, playerId, moreHeaders )
     {
         var headers = lib1.commonHeaders
         headers['x-player-id'] = playerId
+
+        if (moreHeaders)
+        {
+            for (var key in moreHeaders)
+            {
+                headers[key] = moreHeaders[key]
+            }
+        }
 
         return axios.create(
             {
