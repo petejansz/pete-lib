@@ -5,17 +5,19 @@
 var Processes = ( function ()
 {
     const modulesPath = '/usr/share/node_modules/'
+    var igtPdLib = require( modulesPath + 'pete-lib/igt-pd-lib' )
+    var igtCas = require( modulesPath + 'pete-lib/igt-cas' )
+    var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
     const axios = require( modulesPath + 'axios' )
-    var lib1 = require( modulesPath + 'pete-lib/pete-util' )
 
-    var createAxiosInstance = function( host, playerId, moreHeaders )
+    var createAxiosInstance = function ( host, playerId, moreHeaders )
     {
-        var headers = lib1.commonHeaders
+        var headers = igtPdLib.getCommonHeaders()
         headers['x-player-id'] = playerId
 
-        if (moreHeaders)
+        if ( moreHeaders )
         {
-            for (var key in moreHeaders)
+            for ( var key in moreHeaders )
             {
                 headers[key] = moreHeaders[key]
             }
@@ -23,26 +25,26 @@ var Processes = ( function ()
 
         return axios.create(
             {
-                baseURL: 'http://' + host + ':' + lib1.crmProcessesPort,
+                baseURL: 'http://' + host + ':' + igtPdLib.getCrmProcessesPort(),
                 headers: headers,
             }
         )
     },
 
-    createProcessesRequest = function ()
-    {
-        var request =
+        createProcessesRequest = function ()
+        {
+            var request =
             {
-                callerChannelId: lib1.caConstants.channelId,
-                callingClientId: lib1.getFirstIPv4Address(),
-                callerSystemId: lib1.caConstants.systemId,
-                transactionIdBase: lib1.generateUUID(),
+                callerChannelId: igtCas.getChannelId(),
+                callingClientId: peteUtil.getFirstIPv4Address(),
+                callerSystemId: igtCas.getSystemId(),
+                transactionIdBase: peteUtil.generateUUID(),
                 transactionTime: new Date().valueOf(),
-                siteID: lib1.caConstants.siteID
+                siteID: igtCas.getSiteId()
             }
 
-        return request
-    }
+            return request
+        }
 
     return {
         createAxiosInstance: createAxiosInstance,
