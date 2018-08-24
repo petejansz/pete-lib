@@ -7,7 +7,7 @@ var Pd2Admin = ( function ()
     var modulesPath = '/usr/share/node_modules/'
     var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
 
-    var getPlayerHistory = function ( pdAdminSystem, playerId, responseHandler )
+    getPlayerThing = function ( pdAdminSystem, playerId, thing, responseHandler )
     {
         var request = require( modulesPath + 'request-promise' )
 
@@ -15,7 +15,7 @@ var Pd2Admin = ( function ()
         {
             method: 'GET',
             rejectUnauthorized: false,
-            url: pdAdminSystem.url + '/' + playerId + '/player-history',
+            url: pdAdminSystem.url + '/' + playerId + '/' + thing,
             qs: pdAdminSystem.qs,
             headers:
             {
@@ -34,27 +34,6 @@ var Pd2Admin = ( function ()
         {
             return request( options )
         }
-    },
-
-    // f: "per | pro"
-    getPersProf = function ( pdAdminSystem, playerId, f, responseHandler )
-    {
-        var util = require( 'util' )
-        var request = require( modulesPath + 'request' )
-
-        var fun = f.match( /^per/i ) ? 'personal-info' : 'profile'
-        var options =
-        {
-            method: 'GET',
-            url: pdAdminSystem.url + util.format( '/%s/%s', playerId, fun ),
-            headers: peteUtil.adminHeaders
-        }
-
-        options.headers.authorization = pdAdminSystem.auth,
-        options.headers.referer = peteUtil.getFirstIPv4Address()
-        options.headers.dnt = '1'
-
-        request( options, responseHandler )
     },
 
     getPlayerId = function ( pdAdminSystem, username, responseHandler )
@@ -246,8 +225,7 @@ var Pd2Admin = ( function ()
         createNote: createNote,
         getPlayerId: getPlayerId,
         getAdminEnums: getAdminEnums,
-        getPersProf: getPersProf,
-        getPlayerHistory: getPlayerHistory,
+        getPlayerThing: getPlayerThing,
         searchForPlayers: searchForPlayers,
         services: services
     }

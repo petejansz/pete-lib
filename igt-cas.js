@@ -1,3 +1,8 @@
+/**
+ * NodeJS JavaScript Calif site function library
+ *
+ * 2018-08-24 Pete Jansz
+ */
 
 var IGTCas = ( function ()
 {
@@ -18,7 +23,7 @@ var IGTCas = ( function ()
         PWS_CHANNEL_ID: 2
     }
 
-    var getChannelId = function ( hostname )
+    getChannelId = function ( hostname )
     {
         var channelId
 
@@ -34,44 +39,44 @@ var IGTCas = ( function ()
         return channelId
     },
 
-        createHeaders = function ( hostname )
+    createHeaders = function ( hostname )
+    {
+        var headers = igtPdLib.getCommonHeaders()
+        headers
+        headers['x-ex-system-id'] = CA_SITE_CONSTANTS.SYSTEM_ID
+        headers['x-site-id'] = CA_SITE_CONSTANTS.SITE_ID
+        headers['x-channel-id'] = CA_PD_CONSTANTS.PWS_CHANNEL_ID
+
+        if ( hostname && hostname.match( /mobile/i ) )
         {
-            var headers = igtPdLib.getCommonHeaders()
-            headers
-            headers['x-ex-system-id'] = CA_SITE_CONSTANTS.SYSTEM_ID
-            headers['x-site-id'] = CA_SITE_CONSTANTS.SITE_ID
+            headers['x-channel-id'] = CA_PD_CONSTANTS.MOBILE_CHANNEL_ID
+        }
+        else
+        {
             headers['x-channel-id'] = CA_PD_CONSTANTS.PWS_CHANNEL_ID
+        }
 
-            if ( hostname && hostname.match( /mobile/i ) )
-            {
-                headers['x-channel-id'] = CA_PD_CONSTANTS.MOBILE_CHANNEL_ID
-            }
-            else
-            {
-                headers['x-channel-id'] = CA_PD_CONSTANTS.PWS_CHANNEL_ID
-            }
+        return headers
+    },
 
-            return headers
-        },
+    createLoginRequest = function ( hostname )
+    {
+        request = { siteId: CA_PD_CONSTANTS.SITE_ID }
 
-        createLoginRequest = function ( hostname )
+        if ( hostname.match( /mobile/i ) )
         {
-            request = { siteId: CA_PD_CONSTANTS.SITE_ID }
+            request.clientId = CA_PD_CONSTANTS.MOBILE_CLIENT_ID
+        }
+        else
+        {
+            request.clientId = CA_PD_CONSTANTS.PWS_CLIENT_ID
+        }
 
-            if ( hostname.match( /mobile/i ) )
-            {
-                request.clientId = CA_PD_CONSTANTS.MOBILE_CLIENT_ID
-            }
-            else
-            {
-                request.clientId = CA_PD_CONSTANTS.PWS_CLIENT_ID
-            }
+        return request
+    },
 
-            return request
-        },
-
-        getSiteId = function () { return CA_SITE_CONSTANTS.SITE_ID },
-        getSystemId = function () { return CA_SITE_CONSTANTS.SYSTEM_ID }
+    getSiteId = function () { return CA_SITE_CONSTANTS.SITE_ID },
+    getSystemId = function () { return CA_SITE_CONSTANTS.SYSTEM_ID }
 
     return { getChannelId: getChannelId, createHeaders: createHeaders, createLoginRequest: createLoginRequest, getSiteId: getSiteId, getSystemId: getSystemId }
 } )()

@@ -10,7 +10,7 @@ var Processes = ( function ()
     var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
     const axios = require( modulesPath + 'axios' )
 
-    var createAxiosInstance = function ( host, playerId, moreHeaders )
+    createAxiosInstance = function ( host, playerId, moreHeaders )
     {
         var headers = igtPdLib.getCommonHeaders()
         headers['x-player-id'] = playerId
@@ -31,20 +31,20 @@ var Processes = ( function ()
         )
     },
 
-        createProcessesRequest = function ()
+    createProcessesRequest = function ()
+    {
+        var request =
         {
-            var request =
-            {
-                callerChannelId: igtCas.getChannelId(),
-                callingClientId: peteUtil.getFirstIPv4Address(),
-                callerSystemId: igtCas.getSystemId(),
-                transactionIdBase: peteUtil.generateUUID(),
-                transactionTime: new Date().valueOf(),
-                siteID: igtCas.getSiteId()
-            }
-
-            return request
+            callerChannelId: igtCas.getChannelId(),
+            callingClientId: peteUtil.getFirstIPv4Address(),
+            callerSystemId: igtCas.getSystemId(),
+            transactionIdBase: peteUtil.generateUUID(),
+            transactionTime: new Date().valueOf(),
+            siteID: igtCas.getSiteId()
         }
+
+        return request
+    }
 
     return {
         createAxiosInstance: createAxiosInstance,

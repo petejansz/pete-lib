@@ -1,5 +1,5 @@
 /**
- * NodeJS JavaScript REST and other functions, objects
+ * NodeJS JavaScript functions, objects
  *
  * 2018-08-15 Make a proper library of this
  * 2017-12-06 Pete Jansz
