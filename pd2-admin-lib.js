@@ -112,7 +112,7 @@ var Pd2Admin = ( function ()
         {
             method: 'POST',
             rejectUnauthorized: false,
-            url: pdAdminSystem.url + '/' + playerId + '/note',
+            url: pdAdminSystem.url + '/' + playerId + '/send-portal-message',
             headers:
             {
                 'cache-control': 'no-cache',
@@ -122,10 +122,7 @@ var Pd2Admin = ( function ()
             },
             body:
             {
-                displayAlert: false,
-                note: 'Make a note.',
-                user: 'administrator',
-                creationDate: new Date().getTime()
+                message: "pd2-admin.js mknote " + new Date().getTime()
             },
             json: true
         }
