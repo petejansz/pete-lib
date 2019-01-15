@@ -6,6 +6,7 @@ var Pd2Admin = ( function ()
 {
     var modulesPath = '/usr/share/node_modules/'
     var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
+    var util = require( 'util' )
 
     getPlayerThing = function ( pdAdminSystem, playerId, thing, responseHandler )
     {
@@ -63,13 +64,10 @@ var Pd2Admin = ( function ()
         var options =
         {
             method: 'GET',
+            rejectUnauthorized: false,
             url: pdAdminSystem.url.toString().replace( 'players', 'enums' ),
             headers: peteUtil.adminHeaders
         }
-
-        options.headers.authorization = pdAdminSystem.auth,
-        options.headers.referer = peteUtil.getFirstIPv4Address()
-        options.headers.dnt = '1'
 
         request( options, responseHandler )
     },
@@ -130,6 +128,30 @@ var Pd2Admin = ( function ()
         request( options, responseHandler )
     },
 
+    activateAccount = function ( pdAdminSystem, playerId, personalInfo, responseHandler )
+    {
+        var request = require( modulesPath + 'request' )
+
+        var options =
+        {
+            method: 'POST',
+            rejectUnauthorized: false,
+            url: pdAdminSystem.url + '/' + playerId + '/activateAccount',
+            headers:
+            {
+                'cache-control': 'no-cache',
+                referer: peteUtil.getFirstIPv4Address(),
+                dnt: '1',
+                Authorization: pdAdminSystem.auth,
+            },
+            // body: personalInfo,
+            json: true
+        }
+        options.body = personalInfo
+
+        request( options, responseHandler )
+    },
+
     closeAccount = function ( pdAdminSystem, playerId, responseHandler )
     {
         var request = require( modulesPath + 'request' )
@@ -148,13 +170,14 @@ var Pd2Admin = ( function ()
             },
             body:
             {
-                contractId: playerId, reason: 'Admin, close this account!'
+                contractId: playerId.toString(),
+                reason: 'Admin, close this account!'
             },
             json: true
         }
 
         request( options, responseHandler )
-    }
+    },
 
     // Get both Player Portal, SecondChance services states or set both to ACTIVATED or SUSPENDED state.
     services = function ( pdAdminSystem, services, responseHandler )
@@ -218,6 +241,7 @@ var Pd2Admin = ( function ()
     }
 
     return {
+        activateAccount: activateAccount,
         closeAccount: closeAccount,
         createNote: createNote,
         getPlayerId: getPlayerId,
