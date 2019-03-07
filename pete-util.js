@@ -1,6 +1,8 @@
 /**
  * NodeJS JavaScript functions, objects
  *
+ * 2019-03-07 Add fieldSorter from
+ *  https://stackoverflow.com/questions/6913512/how-to-sort-an-array-of-objects-by-multiple-fields
  * 2018-08-15 Make a proper library of this
  * 2017-12-06 Pete Jansz
  */
@@ -103,6 +105,36 @@ var util =
         {
             return seen.hasOwnProperty( item ) ? false : ( seen[item] = true );
         } );
+    },
+
+    /**
+     * Sort an array of object, sub-sort on other keys. Descending order, prefix key with '-'
+     * Example:
+     *  homes.sort( fieldSorter( ['state', 'city', '-price'] ) )
+     * @param {*} fields
+     */
+    fieldSorter: function ( fields )
+    {
+        return function ( a, b )
+        {
+            return fields
+                .map( function ( o )
+                {
+                    var dir = 1
+                    if ( o[0] === '-' )
+                    {
+                        dir = -1;
+                        o = o.substring( 1 )
+                    }
+                    if ( a[o] > b[o] ) return dir
+                    if ( a[o] < b[o] ) return -( dir )
+                    return 0;
+                } )
+                .reduce( function firstNonZeroValue( p, n )
+                {
+                    return p ? p : n
+                }, 0 );
+        }
     },
 
     // function for dynamic sorting
