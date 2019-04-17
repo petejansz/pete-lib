@@ -68,7 +68,7 @@ var PdAdmin = ( function ()
             var url = ADMIN_PLAYERSREST_PATH + '/' + playerId + '/send-portal-message'
             var body =
             {
-                message: "pd2-admin.js mknote " + new Date().getTime()
+                message: "pd2-admin.js mknote " + new Date()
             }
 
             return axiosInstance.post( url, body )
