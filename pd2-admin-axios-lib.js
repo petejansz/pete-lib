@@ -20,7 +20,7 @@ var PdAdmin = ( function ()
             headers: igtPdLib.getCommonHeaders()
         }
 
-        defaults.headers.auth = pdAdminSystem.auth
+        defaults.headers.Authorization = pdAdminSystem.auth
         if ( pdAdminSystem.cookie )
         { defaults.headers.cookie = pdAdminSystem.cookie }
         defaults.headers.referer = peteUtil.getFirstIPv4Address()
@@ -60,7 +60,6 @@ var PdAdmin = ( function ()
         searchForPlayers = function ( axiosInstance, qs )
         {
             var url = ADMIN_PLAYERSREST_PATH + '?' + querystring.stringify( qs )
-            console.log( url )
             return axiosInstance.get( url )
         },
 
