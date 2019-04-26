@@ -50,7 +50,7 @@ var IGTCas = ( function ()
         if ( hostname && hostname.match( /mobile/i ) )
         {
             headers['x-channel-id'] = CA_PD_CONSTANTS.MOBILE_CHANNEL_ID
-            headers['x-esa-api-key'] = 'AGpTKF0ze+6H6x3NTqjbVrMfcvt3MoZ7'
+            headers['x-esa-api-key'] = 'di9bJ9MPTXOZvEKAvd7CM8cRJ4Afo54b'
         }
         else
         {
@@ -62,7 +62,7 @@ var IGTCas = ( function ()
 
     createLoginRequest = function ( hostname, username, password )
     {
-        request = { siteId: CA_PD_CONSTANTS.SITE_ID }
+        request = { siteId: CA_SITE_CONSTANTS.SITE_ID }
 
         if ( hostname.match( /mobile/i ) )
         {
