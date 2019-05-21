@@ -2,198 +2,194 @@
  * Author: Pete Jansz
  */
 
-var Pd2Admin = ( function ()
+var modulesPath = '/usr/share/node_modules/'
+var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
+
+function getPlayerThing( pdAdminSystem, playerId, thing, responseHandler )
 {
-    var modulesPath = '/usr/share/node_modules/'
-    var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
-    var util = require( 'util' )
+    var request = require( modulesPath + 'request-promise' )
 
-    getPlayerThing = function ( pdAdminSystem, playerId, thing, responseHandler )
+    var options =
     {
-        var request = require( modulesPath + 'request-promise' )
-
-        var options =
+        method: 'GET',
+        rejectUnauthorized: false,
+        url: pdAdminSystem.url + '/' + playerId + '/' + thing,
+        qs: pdAdminSystem.qs,
+        headers:
         {
-            method: 'GET',
-            rejectUnauthorized: false,
-            url: pdAdminSystem.url + '/' + playerId + '/' + thing,
-            qs: pdAdminSystem.qs,
-            headers:
-            {
-                'cache-control': 'no-cache',
-                referer: peteUtil.getFirstIPv4Address(),
-                dnt: '1',
-                Authorization: pdAdminSystem.auth,
-            }
+            'cache-control': 'no-cache',
+            referer: peteUtil.getFirstIPv4Address(),
+            dnt: '1',
+            Authorization: pdAdminSystem.auth,
         }
+    }
 
-        if ( responseHandler )
-        {
-            request( options, responseHandler )
-        }
-        else
-        {
-            return request( options )
-        }
-    },
-
-    getPlayerId = function ( pdAdminSystem, username, responseHandler )
+    if ( responseHandler )
     {
-        var request = require( modulesPath + 'request' )
-
-
-        var options =
-        {
-            method: 'GET',
-            url: pdAdminSystem.url,
-            qs: { email: encodeURI( username ) },
-            headers: peteUtil.adminHeaders
-        }
-
-        options.headers.authorization = pdAdminSystem.auth
-        options.headers.referer = peteUtil.getFirstIPv4Address()
-        options.headers.dnt = '1'
-
         request( options, responseHandler )
-    },
-
-    getAdminEnums = function ( pdAdminSystem, responseHandler )
+    }
+    else
     {
-        var request = require( modulesPath + 'request' )
+        return request( options )
+    }
+}
 
-        var options =
+function getPlayerId( pdAdminSystem, username, responseHandler )
+{
+    var request = require( modulesPath + 'request' )
+
+    var options =
+    {
+        method: 'GET',
+        url: pdAdminSystem.url,
+        qs: { email: encodeURI( username ) },
+        headers: peteUtil.adminHeaders
+    }
+
+    options.headers.authorization = pdAdminSystem.auth
+    options.headers.referer = peteUtil.getFirstIPv4Address()
+    options.headers.dnt = '1'
+
+    request( options, responseHandler )
+}
+
+function getAdminEnums( pdAdminSystem, responseHandler )
+{
+    var request = require( modulesPath + 'request' )
+
+    var options =
+    {
+        method: 'GET',
+        rejectUnauthorized: false,
+        url: pdAdminSystem.url.toString().replace( 'players', 'enums' ),
+        headers: peteUtil.adminHeaders
+    }
+
+    request( options, responseHandler )
+}
+
+// Return a promise when responseHandler null
+function searchForPlayers( pdAdminSystem, responseHandler )
+{
+    var request = require( modulesPath + 'request-promise' )
+
+    var options =
+    {
+        method: 'GET',
+        rejectUnauthorized: false,
+        url: pdAdminSystem.url,
+        qs: pdAdminSystem.qs,
+        headers:
         {
-            method: 'GET',
-            rejectUnauthorized: false,
-            url: pdAdminSystem.url.toString().replace( 'players', 'enums' ),
-            headers: peteUtil.adminHeaders
+            'cache-control': 'no-cache',
+            referer: peteUtil.getFirstIPv4Address(),
+            dnt: '1',
+            Authorization: pdAdminSystem.auth,
         }
+    }
 
+    if ( responseHandler )
+    {
         request( options, responseHandler )
-    },
-
-    // Return a promise when responseHandler null
-    searchForPlayers = function ( pdAdminSystem, responseHandler )
+    }
+    else
     {
-        var request = require( modulesPath + 'request-promise' )
+        return request( options )
+    }
+}
 
-        var options =
-        {
-            method: 'GET',
-            rejectUnauthorized: false,
-            url: pdAdminSystem.url,
-            qs: pdAdminSystem.qs,
-            headers:
-            {
-                'cache-control': 'no-cache',
-                referer: peteUtil.getFirstIPv4Address(),
-                dnt: '1',
-                Authorization: pdAdminSystem.auth,
-            }
-        }
+function createNote( pdAdminSystem, playerId, responseHandler )
+{
+    var request = require( modulesPath + 'request' )
 
-        if ( responseHandler )
-        {
-            request( options, responseHandler )
-        }
-        else
-        {
-            return request( options )
-        }
-    },
-
-    createNote = function ( pdAdminSystem, playerId, responseHandler )
+    var options =
     {
-        var request = require( modulesPath + 'request' )
-
-        var options =
+        method: 'POST',
+        rejectUnauthorized: false,
+        url: pdAdminSystem.url + '/' + playerId + '/send-portal-message',
+        headers:
         {
-            method: 'POST',
-            rejectUnauthorized: false,
-            url: pdAdminSystem.url + '/' + playerId + '/send-portal-message',
-            headers:
-            {
-                'cache-control': 'no-cache',
-                referer: peteUtil.getFirstIPv4Address(),
-                dnt: '1',
-                Authorization: pdAdminSystem.auth,
-            },
-            body:
-            {
-                message: "pd2-admin.js mknote " + new Date().getTime()
-            },
-            json: true
-        }
+            'cache-control': 'no-cache',
+            referer: peteUtil.getFirstIPv4Address(),
+            dnt: '1',
+            Authorization: pdAdminSystem.auth,
+        },
+        body:
+        {
+            message: "pd2-admin.js mknote " + new Date().getTime()
+        },
+        json: true
+    }
 
-        request( options, responseHandler )
-    },
+    request( options, responseHandler )
+}
 
-    activateAccount = function ( pdAdminSystem, playerId, personalInfo, responseHandler )
+function activateAccount( pdAdminSystem, playerId, personalInfo, responseHandler )
+{
+    var request = require( modulesPath + 'request' )
+
+    var options =
     {
-        var request = require( modulesPath + 'request' )
-
-        var options =
+        method: 'POST',
+        rejectUnauthorized: false,
+        url: pdAdminSystem.url + '/' + playerId + '/activateAccount',
+        headers:
         {
-            method: 'POST',
-            rejectUnauthorized: false,
-            url: pdAdminSystem.url + '/' + playerId + '/activateAccount',
-            headers:
-            {
-                'cache-control': 'no-cache',
-                referer: peteUtil.getFirstIPv4Address(),
-                dnt: '1',
-                Authorization: pdAdminSystem.auth,
-            },
-            // body: personalInfo,
-            json: true
-        }
-        options.body = personalInfo
+            'cache-control': 'no-cache',
+            referer: peteUtil.getFirstIPv4Address(),
+            dnt: '1',
+            Authorization: pdAdminSystem.auth,
+        },
+        // body: personalInfo,
+        json: true
+    }
+    options.body = personalInfo
 
-        request( options, responseHandler )
-    },
+    request( options, responseHandler )
+}
 
-    closeAccount = function ( pdAdminSystem, playerId, responseHandler )
+function closeAccount( pdAdminSystem, playerId, responseHandler )
+{
+    var request = require( modulesPath + 'request' )
+
+    var options =
     {
-        var request = require( modulesPath + 'request' )
-
-        var options =
+        method: 'PUT',
+        rejectUnauthorized: false,
+        url: pdAdminSystem.url + '/' + playerId + '/closeaccount',
+        headers:
         {
-            method: 'PUT',
-            rejectUnauthorized: false,
-            url: pdAdminSystem.url + '/' + playerId + '/closeaccount',
-            headers:
-            {
-                'cache-control': 'no-cache',
-                referer: peteUtil.getFirstIPv4Address(),
-                dnt: '1',
-                Authorization: pdAdminSystem.auth,
-            },
-            body:
-            {
-                contractId: playerId.toString(),
-                reason: 'Admin, close this account!'
-            },
-            json: true
-        }
+            'cache-control': 'no-cache',
+            referer: peteUtil.getFirstIPv4Address(),
+            dnt: '1',
+            Authorization: pdAdminSystem.auth,
+        },
+        body:
+        {
+            contractId: playerId.toString(),
+            reason: 'Admin, close this account!'
+        },
+        json: true
+    }
 
-        request( options, responseHandler )
-    },
+    request( options, responseHandler )
+}
 
-    // Get both Player Portal, SecondChance services states or set both to ACTIVATED or SUSPENDED state.
-    services = function ( pdAdminSystem, services, responseHandler )
+// Get both Player Portal, SecondChance services states or set both to ACTIVATED or SUSPENDED state.
+function services( pdAdminSystem, services, responseHandler )
+{
+    var request = require( modulesPath + 'request' )
+
+    var options = {}
+
+    if ( services.serviceIds )
     {
-        var request = require( modulesPath + 'request' )
-
-        var options = {}
-
-        if ( services.serviceIds )
-        {
-            options =
+        options =
             {
                 method: 'PUT',
                 rejectUnauthorized: false,
                 url: pdAdminSystem.url + '/' + services.playerId + '/services/' + services.activate,
-                useQuerystring : true,
+                useQuerystring: true,
                 qs:
                 {
                     serviceId: services.serviceIds
@@ -218,10 +214,10 @@ var Pd2Admin = ( function ()
                 },
                 json: true
             }
-        }
-        else
-        {
-            options =
+    }
+    else
+    {
+        options =
             {
                 method: 'GET',
                 rejectUnauthorized: false,
@@ -235,21 +231,19 @@ var Pd2Admin = ( function ()
                 },
                 json: true
             }
-        }
-
-        request( options, responseHandler )
     }
 
-    return {
-        activateAccount: activateAccount,
-        closeAccount: closeAccount,
-        createNote: createNote,
-        getPlayerId: getPlayerId,
-        getAdminEnums: getAdminEnums,
-        getPlayerThing: getPlayerThing,
-        searchForPlayers: searchForPlayers,
-        services: services
-    }
-} )()
+    request( options, responseHandler )
+}
 
-module.exports = Pd2Admin
+module.exports =
+{
+    activateAccount,
+    closeAccount,
+    createNote,
+    getPlayerId,
+    getAdminEnums,
+    getPlayerThing,
+    searchForPlayers,
+    services
+}
