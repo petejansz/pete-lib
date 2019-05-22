@@ -2,8 +2,7 @@
  * Author: Pete Jansz
  */
 
-var modulesPath = '/usr/share/node_modules/'
-var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
+var peteUtil = require('./pete-util')
 
 function getPlayerThing( pdAdminSystem, playerId, thing, responseHandler )
 {

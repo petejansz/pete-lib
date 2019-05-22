@@ -2,11 +2,10 @@
  * Author: Pete Jansz
  */
 
-const modulesPath = '/usr/share/node_modules/'
-var igtPdLib = require( modulesPath + 'pete-lib/igt-pd-lib' )
-var igtCas = require( modulesPath + 'pete-lib/igt-cas' )
-var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
-const axios = require( modulesPath + 'axios' )
+var peteUtil = require('./pete-util')
+var igtPdLib = require( './igt-pd-lib' )
+var igtCas = require( './igt-cas' )
+const axios = require( 'axios' )
 
 function createAxiosInstance( host, playerId, moreHeaders )
 {

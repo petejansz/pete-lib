@@ -6,10 +6,9 @@
 var PdAdmin = ( function ()
 {
     const querystring = require( 'querystring' )
-    var modulesPath = '/usr/share/node_modules/'
-    var igtPdLib = require( modulesPath + 'pete-lib/igt-pd-lib' )
-    var peteUtil = require( modulesPath + 'pete-lib/pete-util' )
-    const axios = require( modulesPath + 'axios' )
+    var igtPdLib = require( './igt-pd-lib' )
+    var peteUtil = require('./pete-util')
+    const axios = require( 'axios' )
     var ADMIN_PLAYERSREST_PATH = '/california-admin-rest/api/v1/admin/players'
 
     createAxiosInstance = function ( pdAdminSystem, moreHeaders, timeout )

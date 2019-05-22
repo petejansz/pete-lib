@@ -1,8 +1,7 @@
 {
   "name": "pete-lib",
   "version": "1.0.0",
-  "description": "",
-  "main": "test.js",
+  "main": "pete-util.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,5 +10,18 @@
   ],
   "author": "Pete",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^0.18.0",
+    "querystring": "^0.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petejansz/pete-lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/petejansz/pete-lib/issues"
+  },
+  "homepage": "https://github.com/petejansz/pete-lib#readme",
+  "description": ""
 }

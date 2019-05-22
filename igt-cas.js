@@ -4,8 +4,7 @@
  * 2018-08-24 Pete Jansz
  */
 
-const modulesPath = '/usr/share/node_modules/'
-const igtPdLib = require( modulesPath + 'pete-lib/igt-pd-lib' )
+const igtPdLib = require( './igt-pd-lib' )
 
 const API_KEY = 'di9bJ9MPTXOZvEKAvd7CM8cRJ4Afo54b'
 const CA_SITE_CONSTANTS =
