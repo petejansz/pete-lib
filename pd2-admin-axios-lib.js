@@ -109,7 +109,8 @@ var PdAdmin = ( function ()
             return axiosInstance.put( url, body )
         },
 
-        // Get both Player Portal, SecondChance services states or set both to ACTIVATED or SUSPENDED state.
+        // Get both Player Portal, SecondChance services states or
+        // if set both to PREACTIVE or ACTIVATED or SUSPENDED state.
         // if services contains serviceIds[] then activate or suspend else get services[]
         // returns a promise of services[]
         services = function ( axiosInstance, services )
@@ -119,7 +120,7 @@ var PdAdmin = ( function ()
                 var body =
                 {
                     '@class': 'ServiceDTO',
-                    reason: services.activate ? 'Activate account services.' : 'Suspend account services.',
+                    reason: services.svcstate + ' account services.',
                     creationDate: null,
                     lastModificationDate: null,
                     serviceId: services.serviceIds[0],
@@ -132,7 +133,7 @@ var PdAdmin = ( function ()
                     serviceId: services.serviceIds
                 }
                 //PUT /california-admin-rest/api/v1/admin/players/1000006363/services/activate?serviceId=11948&serviceId=11947
-                var url = ADMIN_PLAYERSREST_PATH + '/' + services.playerId + '/services/' + services.activate
+                var url = ADMIN_PLAYERSREST_PATH + '/' + services.playerId + '/services/' + services.svcstate
                 url += '?' + querystring.stringify( qs )
                 return axiosInstance.put( url, body )
             }
