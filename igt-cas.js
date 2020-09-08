@@ -6,7 +6,7 @@
 
 const igtPdLib = require( './igt-pd-lib' )
 
-const API_KEY = 'di9bJ9MPTXOZvEKAvd7CM8cRJ4Afo54b'
+const DEFAULT_API_KEY = 'di9bJ9MPTXOZvEKAvd7CM8cRJ4Afo54b'
 const CA_SITE_CONSTANTS =
 {
     SITE_ID: 35,
@@ -48,7 +48,7 @@ function createHeaders( hostname )
     if ( hostname && hostname.match( /mobile/i ) )
     {
         headers['x-channel-id'] = CA_PD_CONSTANTS.MOBILE_CHANNEL_ID
-        headers['x-esa-api-key'] = API_KEY
+        headers['x-esa-api-key'] = process.env.ESA_API_KEY ? process.env.ESA_API_KEY : DEFAULT_API_KEY
     }
     else
     {
