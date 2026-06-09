@@ -26,6 +26,7 @@ var PdAdmin = ( function ()
         defaults.headers.dnt = '1'
         defaults.headers.rejectUnauthorized = false
         defaults.timeout = timeout ? timeout : 120000
+        defaults.headers.callingClientId = 'pdadmin.js'
 
         if ( moreHeaders )
         {
@@ -62,12 +63,26 @@ var PdAdmin = ( function ()
             return axiosInstance.get( url )
         },
 
-        createNote = function ( axiosInstance, playerId )
+        postNote = function ( axiosInstance, playerId )
+        {
+            var url = ADMIN_PLAYERSREST_PATH + '/' + playerId + '/note'
+            var body =
+            {
+                displayAlert: false,
+                note: 'pdadmin.js says, Hello!',
+                user: 'administrator',
+                creationDate: (new Date()).getTime()
+            }
+
+            return axiosInstance.post( url, body )
+        },
+
+        sendNotification = function ( axiosInstance, playerId )
         {
             var url = ADMIN_PLAYERSREST_PATH + '/' + playerId + '/send-portal-message'
             var body =
             {
-                message: "pd2-admin.js mknote " + new Date()
+                message: "pdadmin.js notification " + new Date()
             }
 
             return axiosInstance.post( url, body )
@@ -148,7 +163,8 @@ var PdAdmin = ( function ()
         activateAccount: activateAccount,
         closeAccount: closeAccount,
         createAxiosInstance: createAxiosInstance,
-        createNote: createNote,
+        postNote: postNote,
+        sendNotification: sendNotification,
         getPlayerId: getPlayerId,
         getAdminEnums: getAdminEnums,
         getPlayerThing: getPlayerThing,
